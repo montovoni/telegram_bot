@@ -2,11 +2,11 @@ from telebot import TeleBot
 import random, os
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from gemini import gerar_resposta_gemini, adicionar_mensagem
-from cep import consultar_cep, salvar_cep
-from cnpj import consultar_cnpj, salvar_cnpj
-from conselho import obter_conselho
-from tradutor import traduzir_mensagem
+from my_project.gemini import gerar_resposta_gemini, adicionar_mensagem
+from my_project.cep import consultar_cep, salvar_cep
+from my_project.cnpj import consultar_cnpj, salvar_cnpj
+from my_project.advice import obter_conselho
+from my_project.translator import traduzir_mensagem
 
 bot = TeleBot("7305570114:AAH2fC93yDWq-aR16gdp3bfyYwGRcxyqHoo")
 
@@ -172,17 +172,11 @@ def user_is_admin(bot, chat_id, user_id):
     member = bot.get_chat_member(chat_id, user_id)
     return member.status in ['administrator', 'creator']
 
-
 # Excluir o webhook existente (se houver)
 bot.remove_webhook()
 
-try:
-    # Informe ao usuário que o bot está em execução
-    print("O bot está rodando! Pressione Ctrl + C para parar.")
+# Informe ao usuário que o bot está em execução
+print("O bot está rodando! Pressione Ctrl + C para parar.")
 
-    # Inicie o bot
-    bot.polling()
-
-except KeyboardInterrupt:
-    # Informe ao usuário que o bot foi interrompido
-    print("O bot foi parado.")
+# Inicie o bot
+bot.polling()
