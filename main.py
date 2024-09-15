@@ -8,7 +8,7 @@ from cnpj import consultar_cnpj, salvar_cnpj
 from conselho import obter_conselho
 from tradutor import traduzir_mensagem
 
-bot = TeleBot("7305570114:AAH2fC93yDWq-aR16gdp3bfyYwGRcxyqHoo")
+bot = TeleBot("API")
 
 @bot.message_handler(commands=['start'])
 def handle_first_message(message):
