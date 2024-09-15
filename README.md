@@ -107,4 +107,4 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ## Contato
 
-Para mais informações ou sugestões, entre em contato através do [seu_email@example.com](mailto:montovoni@hotmail.com).
+Para mais informações ou sugestões, entre em contato através do [montovoni@hotmail.com](mailto:montovoni@hotmail.com).
