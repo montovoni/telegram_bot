@@ -8,7 +8,7 @@ from cnpj import consultar_cnpj, salvar_cnpj
 from conselho import obter_conselho
 from tradutor import traduzir_mensagem
 
-bot = TeleBot("API")
+bot = TeleBot("7305570114:AAH2fC93yDWq-aR16gdp3bfyYwGRcxyqHoo")
 
 @bot.message_handler(commands=['start'])
 def handle_first_message(message):
@@ -172,7 +172,17 @@ def user_is_admin(bot, chat_id, user_id):
     member = bot.get_chat_member(chat_id, user_id)
     return member.status in ['administrator', 'creator']
 
-# Delete the existing webhook (if any)
+
+# Excluir o webhook existente (se houver)
 bot.remove_webhook()
-# Your existing handler functions...
-bot.polling()
+
+try:
+    # Informe ao usuário que o bot está em execução
+    print("O bot está rodando! Pressione Ctrl + C para parar.")
+
+    # Inicie o bot
+    bot.polling()
+
+except KeyboardInterrupt:
+    # Informe ao usuário que o bot foi interrompido
+    print("O bot foi parado.")

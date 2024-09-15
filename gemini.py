@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-genai.configure(api_key="API")
+genai.configure(api_key="AIzaSyCTGDxzEQEsdoOKs2ZpXmrK4aofv-gOO3Q")
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 chat_histories = {}

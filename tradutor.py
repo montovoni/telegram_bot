@@ -1,7 +1,7 @@
 import deepl
 
 # Substitua pela sua chave
-auth_key = "API"
+auth_key = "74852e7a-a3dd-4aba-927f-65fdfc6a60eb:fx"
 
 # Inicializa o tradutor com a chave de autenticação
 translator = deepl.Translator(auth_key)
