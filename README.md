@@ -103,7 +103,7 @@ Sinta-se à vontade para contribuir com este projeto. Para isso:
 
 ## Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está licenciado sob a [@montovoni](LICENSE).
 
 ## Contato
 
