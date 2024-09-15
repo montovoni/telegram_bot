@@ -103,7 +103,7 @@ Sinta-se à vontade para contribuir com este projeto. Para isso:
 
 ## Licença
 
-Este projeto está licenciado sob a [@montovoni](LICENSE).
+Este projeto está licenciado sob a [https://github.com/montovoni](LICENSE).
 
 ## Contato
 
