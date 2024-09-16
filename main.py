@@ -140,11 +140,16 @@ def consultar_conselho(message):
     advice_portuguese = traduzir_mensagem(advice)
     bot.send_message(chat_id, f"Conselho do dia: {advice_portuguese}")
 
-@bot.message_handler(commands=['cnpj'])
+@bot.message_handler(func=lambda message: message.text.lower().startswith('/cnpj'))
 def consultar_cnpj(message):
     chat_id = message.chat.id
     user_message_id = message.message_id
-    cnpj = message.text[len('/cnpj '):].strip()
+
+    # Converte o texto do comando para minúsculas e remove espaços extras
+    message_text = message.text.lower().strip()
+
+    # Extrai o CNPJ, ignorando a variação de maiúsculas e minúsculas
+    cnpj = message_text[len('/cnpj '):].strip()
 
     # Valida o CNPJ antes de prosseguir
     if not validar_cnpj(cnpj):
@@ -152,7 +157,7 @@ def consultar_cnpj(message):
         return
 
     try:
-        cnpj_info = consultar_informacoes_cnpj(cnpj)  # Updated function call
+        cnpj_info = consultar_informacoes_cnpj(cnpj)
 
         if cnpj_info is None:
             bot.send_message(chat_id, "O número do CNPJ não é válido. Verifique se o mesmo foi digitado corretamente.")
