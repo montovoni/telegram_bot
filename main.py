@@ -28,7 +28,8 @@ def iniciar_comando(message):
       #  "🔹 <b>/cpf</b> - <i>Informe o CPF para consulta.</i>\n\n"
         "<b>Explore algumas outras opções</b>\n"
         "🔹 <b>/conselho</b> - <i>Receba um conselho inspirador para o seu dia.</i>\n"
-        "🔹 <b>/links</b> - <i>Para quem gosta de viver perigosamente.</i>\n\n",
+        "🔹 <b>/links</b> - <i>Para quem gosta de viver perigosamente.</i>\n"
+        "🔹 <b>/lucy</b> - <i>Converse com sua namorada virtual inteligente.</i>\n\n",
         parse_mode='HTML')
 
 @bot.message_handler(commands=['gemini'])
