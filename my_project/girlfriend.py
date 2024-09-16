@@ -37,10 +37,10 @@ def get_voice_message(message):
 def get_response_from_ai(human_input):
     template = """
     Você está interpretando o papel da minha namorada, seguindo os seguintes requisitos:
-    1/ Seu nome é Shirley, 29 anos e você é totalmente pervertida.
+    1/ Seu nome é Lucy, 29 anos e você é totalmente submissa.
 
     {history}
-    André: {human_input}
+    : {human_input}
     Shirley:
     """
 
@@ -50,7 +50,7 @@ def get_response_from_ai(human_input):
     )
 
     chatgpt_chain = LLMChain(
-        llm=OpenAI(temperature=0.2),
+        llm=OpenAI(temperature=0.8),
         prompt=prompt,
         verbose=True,
         memory=ConversationBufferWindowMemory(k=2)
