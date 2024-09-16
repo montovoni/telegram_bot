@@ -38,10 +38,10 @@ def iniciar_comando(message):
         "🔹 <b>/lucy</b> - <i>Converse com sua namorada virtual inteligente.</i>\n\n",
         parse_mode='HTML')
 
-@bot.message_handler(commands=['gemini', 'chatgpt', 'lucy'])
+@bot.message_handler(commands=['gemini', 'gemini@montovoni', 'chatgpt', 'chatgpt@montovoni', 'lucy', 'lucy@montovoni'])
 def iniciar_conversa(message):
     chat_id = message.chat.id
-    comando = message.text.split()[0][1:]  # Obtém o comando sem o '/'
+    comando = message.text.split()[0][1:].split('@')[0]
 
     conversas_ativas[chat_id] = comando
     bot.send_message(chat_id, f"Você está agora conversando com {comando.capitalize()}. Para parar, digite /sair.")
@@ -65,7 +65,7 @@ def processar_mensagem(message):
     elif comando == 'lucy':
         relacionamento_virtual(message)
 
-@bot.message_handler(commands=['chatgpt'])
+@bot.message_handler(commands=['chatgpt', 'chatgpt@montovoni'])
 def consultar_chatgpt(message):
     chat_id = message.chat.id
     user_message = message.text.strip()
@@ -83,7 +83,7 @@ def consultar_chatgpt(message):
     finally:
         bot.delete_message(chat_id, loading_message.message_id)
 
-@bot.message_handler(commands=['gemini'])
+@bot.message_handler(commands=['gemini', 'gemini@montovoni'])
 def consultar_gemini(message):
     chat_id = message.chat.id
     user_message = message.text.strip()
@@ -174,7 +174,7 @@ def consultar_links(message):
 
     bot.send_message(chat_id, response, parse_mode='HTML')
 
-@bot.message_handler(commands=['lucy'])
+@bot.message_handler(commands=['lucy', 'lucy@montovoni'])
 def relacionamento_virtual(message):
     chat_id = message.chat.id
     user_message = message.text.strip()
