@@ -114,7 +114,7 @@ def consultar_cnpj(message):
         bot.send_message(chat_id, f"Erro ao consultar o CNPJ: {str(e)}")
 
 @bot.message_handler(commands=['links'])
-def handle_link_command(message):
+def consultar_links(message):
     chat_id = message.chat.id
 
     response = (
@@ -126,24 +126,24 @@ def handle_link_command(message):
 
     bot.send_message(chat_id, response, parse_mode='HTML')
 
-@bot.message_handler(commands=['namorada'])
-def handle_namorada_command(message):
+@bot.message_handler(commands=['lucy'])
+def relacionamento_virtual(message):
     chat_id = message.chat.id
-    user_message = message.text[len('/namorada '):].strip()
+    user_message = message.text[len('/lucy '):].strip()
 
     if not user_message:
-        bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /namorada.")
+        bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /lucy.")
         return
 
     ai_response = get_response_from_ai(user_message)
-    audio_path = get_voice_message(ai_response)
+    audio_lucy = get_voice_message(ai_response)
 
-    if audio_path:
-        # Send the generated audio to the user
-        with open(audio_path, 'rb') as audio_file:
+    if audio_lucy:
+        # Enviar o áudio gerado para o usuário
+        with open(audio_lucy, 'rb') as audio_file:
             bot.send_audio(chat_id, audio_file)
         # Remove the temporary file after sending
-        os.remove(audio_path)
+        # os.remove(audio_path)
     else:
         bot.send_message(chat_id, ai_response)
 
