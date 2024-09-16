@@ -102,11 +102,16 @@ def consultar_gemini(message):
     finally:
         bot.delete_message(chat_id, loading_message.message_id)
 
-@bot.message_handler(commands=['cep'])
+@bot.message_handler(func=lambda message: message.text.lower().startswith('/cep'))
 def consultar_cep(message):
     chat_id = message.chat.id
     user_message_id = message.message_id
-    cep = message.text[len('/cep '):].strip()
+
+    # Converte o texto do comando para minúsculas e remove espaços extras
+    message_text = message.text.lower().strip()
+
+    # Extrai o CEP, ignorando a variação de maiúsculas e minúsculas
+    cep = message_text[len('/cep '):].strip()
 
     if not cep:
         bot.send_message(chat_id, "Por favor, envie um número de CEP após o comando /cep.")
