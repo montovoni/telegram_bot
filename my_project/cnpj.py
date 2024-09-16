@@ -13,6 +13,16 @@ def consultar_cnpj(cnpj):
     else:
         return None
 
+def validar_cnpj(cnpj):
+    # Remove qualquer caractere que não seja um dígito
+    cnpj = ''.join(filter(str.isdigit, cnpj))
+
+    # Verifica se o CNPJ tem exatamente 14 dígitos
+    if len(cnpj) != 14:
+        return False
+
+    return True
+
 def salvar_cnpj(cnpj_info, cnpj):
     file_name = f"consulta_cnpj_{cnpj}.txt"
 
