@@ -196,8 +196,6 @@ def relacionamento_virtual(message):
         bot.send_message(chat_id, resposta_lucy)
     '''
 
-# ==================================================================================================================== #
-
 bot.remove_webhook()
 print("O bot está rodando! Pressione Ctrl + C para parar.")
 bot.polling()
