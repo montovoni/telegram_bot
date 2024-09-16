@@ -1,7 +1,10 @@
 import deepl
+import os
+from dotenv import load_dotenv, find_dotenv
 
-# Substitua pela sua chave
-auth_key = "74852e7a-a3dd-4aba-927f-65fdfc6a60eb:fx"
+# Carregar variáveis de ambiente
+load_dotenv(find_dotenv())
+auth_key = os.getenv("DEEPL_API")
 
 # Inicializa o tradutor com a chave de autenticação
 translator = deepl.Translator(auth_key)
@@ -10,8 +13,4 @@ def traduzir_mensagem(mensagem):
     # Traduz o texto da mensagem para português
     return translator.translate_text(mensagem, target_lang="PT-BR")
 
-'''
-mensagem = 'Hello world'
-mensagem_traduzida = traduzir_mensagem(mensagem)  # Traduz a mensagem
-print(mensagem_traduzida)  # Imprime a mensagem traduzida
-'''
+# - https://developers.deepl.com/docs/v/pt-br

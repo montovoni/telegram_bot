@@ -7,8 +7,18 @@ from my_project.cep import consultar_cep, salvar_cep
 from my_project.cnpj import consultar_cnpj, salvar_cnpj
 from my_project.advice import obter_conselho
 from my_project.translator import traduzir_mensagem
+from my_project.girlfriend import get_response_from_ai, get_voice_message
+from dotenv import load_dotenv, find_dotenv
 
-bot = TeleBot("7305570114:AAH2fC93yDWq-aR16gdp3bfyYwGRcxyqHoo")
+# Especifica o caminho para o arquivo .env dentro da pasta my_project
+env_path = find_dotenv(os.path.join('..', 'my_project', '.env'))
+load_dotenv(env_path)
+
+# Obtém o token do bot do Telegram das variáveis de ambiente
+auth_key = os.getenv("TELEGRAM_TOKEN")
+
+# Inicializa o bot corretamente
+bot = TeleBot(auth_key)
 
 @bot.message_handler(commands=['start'])
 def handle_first_message(message):
@@ -127,6 +137,28 @@ def handle_link_command(message):
     )
 
     bot.send_message(chat_id, response, parse_mode='HTML')
+
+# simulador de namoro com IA
+@bot.message_handler(commands=['namorada'])
+def handle_namorada_command(message):
+    chat_id = message.chat.id
+    user_message = message.text[len('/namorada '):].strip()
+
+    if not user_message:
+        bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /namorada.")
+        return
+
+    ai_response = get_response_from_ai(user_message)
+    audio_path = get_voice_message(ai_response)
+
+    if audio_path:
+        # Send the generated audio to the user
+        with open(audio_path, 'rb') as audio_file:
+            bot.send_audio(chat_id, audio_file)
+        # Remove the temporary file after sending
+        os.remove(audio_path)
+    else:
+        bot.send_message(chat_id, ai_response)
 
 ''' ===============================================================================================================- '''
 
