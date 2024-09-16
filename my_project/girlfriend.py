@@ -1,6 +1,4 @@
-import os
-import requests
-import tempfile
+import os, requests, tempfile
 from langchain import OpenAI, LLMChain, PromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
 from dotenv import load_dotenv, find_dotenv
@@ -9,7 +7,8 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
 
-def get_voice_message(message):
+'''
+def obter_voz(message):
     payload = {
         "text": message,
         "model_id": "eleven_monolingual_v1",
@@ -33,8 +32,9 @@ def get_voice_message(message):
             temp_audio_file_path = temp_audio_file.name
 
         return temp_audio_file_path
+'''
 
-def get_response_from_ai(human_input):
+def obter_resposta_lucy(human_input):
     template = """
     Você está interpretando o papel da minha namorada, seguindo os seguintes requisitos:
     1/ Seu nome é Lucy, 29 anos e você é totalmente submissa.

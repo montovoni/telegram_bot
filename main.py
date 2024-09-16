@@ -10,7 +10,7 @@ from my_project.cnpj import consultar_informacoes_cnpj, salvar_cnpj, validar_cnp
 from my_project.advice import obter_conselho
 from my_project.translator import traduzir_mensagem
 
-from my_project.girlfriend import get_response_from_ai, get_voice_message
+from my_project.girlfriend import obter_resposta_lucy #, obter_voz
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -166,17 +166,24 @@ def relacionamento_virtual(message):
         bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /lucy.")
         return
 
-    ai_response = get_response_from_ai(user_message)
-    audio_lucy = get_voice_message(ai_response)
+    resposta_lucy = obter_resposta_lucy(user_message)
+
+    # Apenas enviando a mensagem de texto
+    bot.send_message(chat_id, resposta_lucy)
+
+    '''
+    Se desejar manter o código de áudio para uso futuro, você pode descomenta-lo:
+    audio_lucy = obter_voz(resposta_lucy)
 
     if audio_lucy:
         # Enviar o áudio gerado para o usuário
         with open(audio_lucy, 'rb') as audio_file:
             bot.send_audio(chat_id, audio_file)
         # Remove the temporary file after sending
-        # os.remove(audio_path)
+        os.remove(audio_lucy)
     else:
-        bot.send_message(chat_id, ai_response)
+        bot.send_message(chat_id, resposta_lucy)
+    '''
 
 # ==================================================================================================================== #
 
