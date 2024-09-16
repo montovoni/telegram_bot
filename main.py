@@ -1,12 +1,17 @@
 from telebot import TeleBot
 import random, os
 
-from my_project.gemini import gerar_resposta_gemini, adicionar_mensagem
+from my_project.gemini import gerar_resposta_gemini, adicionar_mensagem_gemini
+from my_project.chatgpt import gerar_resposta_chatgpt, adicionar_mensagem_chatgpt
+
 from my_project.cep import consultar_viacep, salvar_viacep
 from my_project.cnpj import consultar_informacoes_cnpj, salvar_cnpj, validar_cnpj
+
 from my_project.advice import obter_conselho
 from my_project.translator import traduzir_mensagem
+
 from my_project.girlfriend import get_response_from_ai, get_voice_message
+
 from dotenv import load_dotenv, find_dotenv
 
 env_path = find_dotenv(os.path.join('..', 'my_project', '.env'))
@@ -21,7 +26,8 @@ def iniciar_comando(message):
     bot.send_message(chat_id,
         "🌟 <b>Bem-vindo ao Bot Interativo!</b> 🌟\n\n"
         "<b>Interaja com a inteligência artificial:</b>\n"
-        "🔹 <b>/gemini</b> - <i>Digite sua mensagem para consultar o Gemini.</i>\n\n"
+        "🔹 <b>/gemini</b> - <i>Digite sua mensagem para consultar o Gemini.</i>\n"
+        "🔹 <b>/chatgpt</b> - <i>Digite sua mensagem para consultar o ChatGpt.</i>\n\n"
         "<b>Encontre informações rápidas:</b>\n"
         "🔹 <b>/cep</b> - <i>Informe o número do CEP para consulta.</i>\n"
         "🔹 <b>/cnpj</b> - <i>Informe o número do CNPJ para consulta.</i>\n\n"
@@ -32,6 +38,30 @@ def iniciar_comando(message):
         "🔹 <b>/lucy</b> - <i>Converse com sua namorada virtual inteligente.</i>\n\n",
         parse_mode='HTML')
 
+@bot.message_handler(commands=['chatgpt'])
+def consultar_chatgpt(message):
+    chat_id = message.chat.id
+    user_message = message.text[len('/chatgpt '):].strip()
+
+    # Verifica se a mensagem do usuário não está vazia
+    if not user_message:
+        bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /chatgpt.")
+        return
+
+    adicionar_mensagem_chatgpt(chat_id, user_message, role="user")
+    loading_message = bot.send_message(chat_id, "Processando sua mensagem, aguarde...")
+
+    try:
+        # Obtém a resposta do OpenAI
+        answer = gerar_resposta_chatgpt(chat_id)
+        bot.send_message(chat_id, answer)
+
+    except Exception as e:
+        bot.send_message(chat_id, f"Erro ao processar a mensagem: {str(e)}")
+
+    finally:
+        bot.delete_message(chat_id, loading_message.message_id)
+
 @bot.message_handler(commands=['gemini'])
 def consultar_gemini(message):
     chat_id = message.chat.id
@@ -41,7 +71,7 @@ def consultar_gemini(message):
         bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /gemini.")
         return
 
-    adicionar_mensagem(chat_id, user_message, role="user")
+    adicionar_mensagem_gemini(chat_id, user_message, role="user")
     loading_message = bot.send_message(chat_id, "Processando sua mensagem, aguarde...")
 
     try:

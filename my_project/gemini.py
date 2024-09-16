@@ -5,7 +5,7 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 chat_histories = {}
 
-def adicionar_mensagem(chat_id, mensagem, role="user"):
+def adicionar_mensagem_gemini(chat_id, mensagem, role="user"):
 
     if chat_id not in chat_histories:
         chat_histories[chat_id] = []
@@ -23,7 +23,7 @@ def gerar_resposta_gemini(chat_id):
         response = model.generate_content(contents=[conversation_history], stream=True)
         response.resolve()
         resposta_texto = response.text
-        adicionar_mensagem(chat_id, resposta_texto, role="Gemini")
+        adicionar_mensagem_gemini(chat_id, resposta_texto, role="Gemini")
         return resposta_texto
 
     except Exception as e:
