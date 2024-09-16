@@ -3,14 +3,11 @@ import random, os
 
 from my_project.gemini import gerar_resposta_gemini, adicionar_mensagem_gemini
 from my_project.chatgpt import gerar_resposta_chatgpt, adicionar_mensagem_chatgpt
-
 from my_project.cep import consultar_viacep, salvar_viacep
 from my_project.cnpj import consultar_informacoes_cnpj, salvar_cnpj, validar_cnpj
-
 from my_project.advice import obter_conselho
 from my_project.translator import traduzir_mensagem
-
-from my_project.girlfriend import obter_resposta_lucy #, obter_voz
+from my_project.girlfriend import obter_resposta_lucy  # , obter_voz
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -18,6 +15,9 @@ env_path = find_dotenv(os.path.join('..', 'my_project', '.env'))
 load_dotenv(env_path)
 auth_key = os.getenv("TELEGRAM_TOKEN")
 bot = TeleBot(auth_key)
+
+# Dicionário para rastrear o estado de conversa de cada usuário
+conversas_ativas = {}
 
 @bot.message_handler(commands=['start'])
 def iniciar_comando(message):
@@ -38,21 +38,42 @@ def iniciar_comando(message):
         "🔹 <b>/lucy</b> - <i>Converse com sua namorada virtual inteligente.</i>\n\n",
         parse_mode='HTML')
 
+@bot.message_handler(commands=['gemini', 'chatgpt', 'lucy'])
+def iniciar_conversa(message):
+    chat_id = message.chat.id
+    comando = message.text.split()[0][1:]  # Obtém o comando sem o '/'
+
+    conversas_ativas[chat_id] = comando
+    bot.send_message(chat_id, f"Você está agora conversando com {comando.capitalize()}. Para parar, digite /sair.")
+
+@bot.message_handler(commands=['sair', 'fechar'])
+def encerrar_conversa(message):
+    chat_id = message.chat.id
+    if chat_id in conversas_ativas:
+        del conversas_ativas[chat_id]
+        bot.send_message(chat_id, "Conversa encerrada. Você pode começar uma nova conversa digitando um dos comandos (/gemini, /chatgpt, /lucy).")
+
+@bot.message_handler(func=lambda message: message.chat.id in conversas_ativas)
+def processar_mensagem(message):
+    chat_id = message.chat.id
+    comando = conversas_ativas.get(chat_id)
+
+    if comando == 'gemini':
+        consultar_gemini(message)
+    elif comando == 'chatgpt':
+        consultar_chatgpt(message)
+    elif comando == 'lucy':
+        relacionamento_virtual(message)
+
 @bot.message_handler(commands=['chatgpt'])
 def consultar_chatgpt(message):
     chat_id = message.chat.id
-    user_message = message.text[len('/chatgpt '):].strip()
-
-    # Verifica se a mensagem do usuário não está vazia
-    if not user_message:
-        bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /chatgpt.")
-        return
+    user_message = message.text.strip()
 
     adicionar_mensagem_chatgpt(chat_id, user_message, role="user")
     loading_message = bot.send_message(chat_id, "Processando sua mensagem, aguarde...")
 
     try:
-        # Obtém a resposta do OpenAI
         answer = gerar_resposta_chatgpt(chat_id)
         bot.send_message(chat_id, answer)
 
@@ -65,19 +86,15 @@ def consultar_chatgpt(message):
 @bot.message_handler(commands=['gemini'])
 def consultar_gemini(message):
     chat_id = message.chat.id
-    user_message = message.text[len('/gemini '):].strip()
-
-    if not user_message:
-        bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /gemini.")
-        return
+    user_message = message.text.strip()
 
     adicionar_mensagem_gemini(chat_id, user_message, role="user")
     loading_message = bot.send_message(chat_id, "Processando sua mensagem, aguarde...")
 
     try:
-        answer = gerar_resposta_gemini(chat_id)
-        answer = answer.replace('**', '')
-        bot.send_message(chat_id, answer)
+        resposta = gerar_resposta_gemini(chat_id)
+        resposta = resposta.replace('**', '')
+        bot.send_message(chat_id, resposta)
 
     except Exception as e:
         bot.send_message(chat_id, f"Erro ao processar a mensagem: {str(e)}")
@@ -160,15 +177,9 @@ def consultar_links(message):
 @bot.message_handler(commands=['lucy'])
 def relacionamento_virtual(message):
     chat_id = message.chat.id
-    user_message = message.text[len('/lucy '):].strip()
-
-    if not user_message:
-        bot.send_message(chat_id, "Por favor, envie uma mensagem após o comando /lucy.")
-        return
+    user_message = message.text.strip()
 
     resposta_lucy = obter_resposta_lucy(user_message)
-
-    # Apenas enviando a mensagem de texto
     bot.send_message(chat_id, resposta_lucy)
 
     '''
