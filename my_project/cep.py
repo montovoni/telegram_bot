@@ -1,6 +1,6 @@
 import requests
 
-def consultar_cep(cep):
+def consultar_viacep(cep):
     url = f"https://viacep.com.br/ws/{cep}/json/"
     response = requests.get(url)
 
@@ -13,7 +13,7 @@ def consultar_cep(cep):
     else:
         return None
 
-def salvar_cep(cep_info, cep):
+def salvar_viacep(cep_info, cep):
     file_name = f"consulta_cep_{cep}.txt"
 
     with open(file_name, 'w', encoding='utf-8') as f:

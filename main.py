@@ -2,8 +2,8 @@ from telebot import TeleBot
 import random, os
 
 from my_project.gemini import gerar_resposta_gemini, adicionar_mensagem
-from my_project.cep import consultar_cep, salvar_cep
-from my_project.cnpj import consultar_cnpj, salvar_cnpj, validar_cnpj
+from my_project.cep import consultar_viacep, salvar_viacep
+from my_project.cnpj import consultar_informacoes_cnpj, salvar_cnpj, validar_cnpj
 from my_project.advice import obter_conselho
 from my_project.translator import traduzir_mensagem
 from my_project.girlfriend import get_response_from_ai, get_voice_message
@@ -70,12 +70,12 @@ def consultar_cep(message):
         bot.send_message(chat_id, "CEP inválido. O CEP deve conter 8 dígitos numéricos.")
         return
 
-    cep_info = consultar_cep(cep)
+    cep_info = consultar_viacep(cep)
     if cep_info is None:
         bot.send_message(chat_id, "CEP inválido ou não encontrado.")
         return
 
-    txt_file_name = salvar_cep(cep_info, cep)
+    txt_file_name = salvar_viacep(cep_info, cep)
     with open(txt_file_name, 'rb') as f_txt:
         bot.send_document(chat_id, f_txt, reply_to_message_id=user_message_id)
 
@@ -100,10 +100,10 @@ def consultar_cnpj(message):
         return
 
     try:
-        cnpj_info = consultar_cnpj(cnpj)
+        cnpj_info = consultar_informacoes_cnpj(cnpj)  # Updated function call
 
         if cnpj_info is None:
-            bot.send_message(chat_id, "O número do CNPJ não é válido. Verifique se o mesmo foi digitado corretamente..")
+            bot.send_message(chat_id, "O número do CNPJ não é válido. Verifique se o mesmo foi digitado corretamente.")
             return
 
         txt_file_name = salvar_cnpj(cnpj_info, cnpj)

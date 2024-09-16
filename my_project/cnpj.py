@@ -1,6 +1,6 @@
 import requests
 
-def consultar_cnpj(cnpj):
+def consultar_informacoes_cnpj(cnpj):
     url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
     querystring = {"token": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "cnpj": cnpj, "plugin": "RF"}
     response = requests.get(url, params=querystring)
