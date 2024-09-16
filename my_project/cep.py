@@ -5,7 +5,11 @@ def consultar_cep(cep):
     response = requests.get(url)
 
     if response.status_code == 200:
-        return response.json()
+        data = response.json()
+        # Check if the returned data contains an error
+        if 'erro' in data:
+            return None
+        return data
     else:
         return None
 

@@ -10,14 +10,9 @@ from my_project.translator import traduzir_mensagem
 from my_project.girlfriend import get_response_from_ai, get_voice_message
 from dotenv import load_dotenv, find_dotenv
 
-# Especifica o caminho para o arquivo .env dentro da pasta my_project
 env_path = find_dotenv(os.path.join('..', 'my_project', '.env'))
 load_dotenv(env_path)
-
-# Obtém o token do bot do Telegram das variáveis de ambiente
 auth_key = os.getenv("TELEGRAM_TOKEN")
-
-# Inicializa o bot corretamente
 bot = TeleBot(auth_key)
 
 @bot.message_handler(commands=['start'])
@@ -37,7 +32,6 @@ def handle_first_message(message):
         "🔹 <b>/links</b> - <i>Para quem gosta de viver perigosamente.</i>\n\n",
         parse_mode='HTML')
 
-# Gemini: conversas que vão potencializar suas ideias
 @bot.message_handler(commands=['gemini'])
 def handle_custom_command(message):
     chat_id = message.chat.id
@@ -72,18 +66,19 @@ def handle_cep_command(message):
         bot.send_message(chat_id, "Por favor, envie um número de CEP após o comando /cep.")
         return
 
+    # Basic validation for CEP format (e.g., 8 digits)
+    if not cep.isdigit() or len(cep) != 8:
+        bot.send_message(chat_id, "CEP inválido. O CEP deve conter 8 dígitos numéricos.")
+        return
+
     cep_info = consultar_cep(cep)
     if cep_info is None:
         bot.send_message(chat_id, "CEP inválido ou não encontrado.")
         return
 
     txt_file_name = salvar_cep(cep_info, cep)
-
     with open(txt_file_name, 'rb') as f_txt:
-        delete_button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("🗑️ Excluir", callback_data=f"delete_{txt_file_name}")]]
-        )
-        bot.send_document(chat_id, f_txt, reply_markup=delete_button, reply_to_message_id=user_message_id)
+        bot.send_document(chat_id, f_txt, reply_to_message_id=user_message_id)
 
 @bot.message_handler(commands=['conselho'])
 def handle_advice_command(message):
