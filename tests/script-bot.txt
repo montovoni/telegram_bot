@@ -1,0 +1,55 @@
+1. Criar o arquivo de serviço
+Crie o arquivo de serviço em /etc/systemd/system/telegram_bot.service com o seguinte conteúdo:
+
+=================================================================================================================================
+[Unit]
+Description=Bot Telegram
+After=network.target
+
+[Service]
+# Especifica o usuário que rodará o serviço (altere se necessário)
+User=ubuntu
+WorkingDirectory=/home/ubuntu/telegram_bot
+
+# Ativando o ambiente virtual e executando o script
+ExecStart=/bin/bash -c 'source /home/ubuntu/telegram_bot/venv/bin/activate && python3 /home/ubuntu/telegram_bot/main.py'
+
+# Configura o serviço para reiniciar automaticamente em caso de falha
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+=================================================================================================================================
+
+2. Ativar o serviço
+Depois de criar o arquivo de serviço, siga os passos abaixo para ativá-lo:
+
+	1.1 Recarregar o systemd para reconhecer o novo serviço:
+
+	sudo systemctl daemon-reload
+
+	1.2 Ativar o serviço para iniciar automaticamente na inicialização do sistema:
+	sudo systemctl enable telegram_bot.service
+
+	1.3 Iniciar o serviço manualmente pela primeira vez:
+	sudo systemctl start telegram_bot.service
+
+2. Verificar o status do serviço
+Para verificar o status do serviço e garantir que ele está rodando corretamente, use o comando:
+
+sudo systemctl status telegram_bot.service
+
+=================================================================================================================================
+
+Para parar o serviço que você configurou com systemd, você pode usar o seguinte comando:
+
+sudo systemctl stop telegram_bot.service
+
+Esse comando interrompe o serviço imediatamente, 
+parando a execução do seu script main.py. Se você também quiser desabilitar o serviço para que ele não reinicie 
+automaticamente na próxima inicialização do sistema, 
+você pode usar:
+
+sudo systemctl disable telegram_bot.service
+
