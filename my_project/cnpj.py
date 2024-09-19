@@ -1,4 +1,4 @@
-import requests
+import requests, os
 
 def consultar_informacoes_cnpj(cnpj):
     url = f"https://receitaws.com.br/v1/cnpj/{cnpj}"
@@ -24,7 +24,14 @@ def validar_cnpj(cnpj):
     return True
 
 def salvar_cnpj(cnpj_info, cnpj):
-    file_name = f"consulta_cnpj_{cnpj}.txt"
+    # Define o caminho completo para salvar o arquivo
+    directory = "my_project/consulta_cnpj"
+
+    # Cria o diretório se ele não existir
+    os.makedirs(directory, exist_ok=True)
+
+    # Define o nome do arquivo completo com o caminho
+    file_name = os.path.join(directory, f"consulta_cnpj_{cnpj}.txt")
 
     with open(file_name, 'w', encoding='utf-8') as f:
         f.write("👤 DADOS CADASTRAIS\n\n")

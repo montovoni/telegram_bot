@@ -1,4 +1,4 @@
-import requests
+import requests, os
 
 def consultar_viacep(cep):
     url = f"https://viacep.com.br/ws/{cep}/json/"
@@ -14,7 +14,14 @@ def consultar_viacep(cep):
         return None
 
 def salvar_viacep(cep_info, cep):
-    file_name = f"consulta_cep_{cep}.txt"
+    # Define o caminho completo para salvar o arquivo
+    directory = "my_project/consulta_cep"
+
+    # Cria o diretório se ele não existir
+    os.makedirs(directory, exist_ok=True)
+
+    # Define o nome do arquivo completo com o caminho
+    file_name = os.path.join(directory, f"consulta_cep_{cep}.txt")
 
     with open(file_name, 'w', encoding='utf-8') as f:
         f.write("# DADOS DO CEP\n\n")
