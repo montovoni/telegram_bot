@@ -1,0 +1,24 @@
+Alterar Configurações do SSH: Edite o arquivo de configuração principal do SSH, /etc/ssh/sshd_config, 
+para habilitar o login por senha. Para isso, altere ou adicione as seguintes linhas:
+
+PasswordAuthentication yes
+ChallengeResponseAuthentication no
+UsePAM yes
+
+Salve as alterações e reinicie o serviço SSH com:
+
+sudo systemctl restart ssh
+
+Verificar Configurações Adicionais: Se o login por senha ainda não funcionar, verifique se há outros arquivos de configuração que possam estar 
+sobrescrevendo as alterações feitas no /etc/ssh/sshd_config. Use o comando
+
+grep -r "PasswordAuthentication" /etc/ssh/
+
+Corrigir Configurações em Arquivos Adicionais: Edite o arquivo identificado (/etc/ssh/sshd_config.d/60-cloudimg-settings.conf) e altere PasswordAuthentication no para yes:
+
+sudo nano /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+sudo systemctl restart ssh
+
+Definir Senha para o Usuário: Caso precise definir uma senha para o usuário (ex: ubuntu), utilize o comando:
+
+sudo passwd ubuntu
