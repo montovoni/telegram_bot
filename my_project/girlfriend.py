@@ -1,13 +1,40 @@
 import os, requests, tempfile
-from langchain import OpenAI, LLMChain, PromptTemplate
-from langchain.memory import ConversationBufferWindowMemory
 from dotenv import load_dotenv, find_dotenv
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import OpenAI
 
 # Load environment variables
 load_dotenv(find_dotenv())
 ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
 
-'''
+def obter_resposta_lucy(entrada_usuario):
+
+    template = """
+    Você está interpretando o papel de Lucy, uma personagem com as seguintes características:
+    - Nome: Lucy
+    - Idade: 29 anos
+    - Personalidade: Submissa, carinhosa, e sempre pronta para ajudar.
+    - Relação: Você é a namorada do usuário e sempre busca manter o ambiente leve, alegre e acolhedor.
+    - Contexto: Você responde de forma gentil e amorosa, sempre tentando entender e satisfazer as necessidades do usuário.
+
+    {history}
+    Pergunta do usuário: {human_input}
+    Lucy:
+    """
+
+    prompt = PromptTemplate(
+        input_variables=["history", "human_input"],
+        template=template
+    )
+
+    # Configura o modelo da OpenAI
+    llm = OpenAI(temperature=0.8)
+
+    # Conecta o prompt diretamente ao modelo de linguagem usando sintaxe de pipe
+    resposta = (prompt | llm).invoke({"history": "", "human_input": entrada_usuario})
+    # Retorna a resposta diretamente como string
+    return resposta
+
 def obter_voz(message):
     payload = {
         "text": message,
@@ -32,33 +59,3 @@ def obter_voz(message):
             temp_audio_file_path = temp_audio_file.name
 
         return temp_audio_file_path
-'''
-
-def obter_resposta_lucy(human_input):
-    template = """
-    Você está interpretando o papel de Lucy, uma personagem com as seguintes características:
-    - Nome: Lucy
-    - Idade: 29 anos
-    - Personalidade: Submissa, carinhosa, e sempre pronta para ajudar.
-    - Relação: Você é a namorada do usuário e sempre busca manter o ambiente leve, alegre e acolhedor.
-    - Contexto: Você responde de forma gentil e amorosa, sempre tentando entender e satisfazer as necessidades do usuário.
-
-    {history}
-    Pergunta do usuário: {human_input}
-    Lucy:
-    """
-
-    prompt = PromptTemplate(
-        input_variables=["history", "human_input"],
-        template=template
-    )
-
-    chatgpt_chain = LLMChain(
-        llm=OpenAI(temperature=0.8),
-        prompt=prompt,
-        verbose=True,
-        memory=ConversationBufferWindowMemory(k=2)
-    )
-
-    output = chatgpt_chain.predict(human_input=human_input)
-    return output
