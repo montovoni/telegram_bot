@@ -31,6 +31,7 @@ Siga os passos abaixo para configurar o bot na sua máquina local:
    pip install python-dotenv
    pip install langchain
    pip install langchain_community
+   pip install langchain-openai
    ```
 
    - `pip install telebot`: Instala a biblioteca `telebot`, utilizada para criar bots no Telegram.
