@@ -23,7 +23,7 @@ def validar_cnpj(cnpj):
 
     return True
 
-def salvar_cnpj(cnpj_info, cnpj):
+def salvar_cnpj(cnpj_info, cnpj, usuario_nome, usuario_id):
     # Define o caminho completo para salvar o arquivo
     directory = "my_project/consulta_cnpj"
 
@@ -71,7 +71,14 @@ def salvar_cnpj(cnpj_info, cnpj):
         f.write(f"  - Data: {cnpj_info.get('data_situacao_especial', 'N/A')}\n")
         f.write(f"• STATUS: {cnpj_info.get('status', 'N/A')}\n\n")
 
-        f.write(f"• ÚLTIMA ATUALIZAÇÃO: {cnpj_info.get('ultima_atualizacao', 'N/A')}\n")
+        f.write(f"• ÚLTIMA ATUALIZAÇÃO: {cnpj_info.get('ultima_atualizacao', 'N/A')}\n\n")
+
+        # Adiciona os dados do usuário
+        f.write("# DADOS DO USUÁRIO\n")
+        if usuario_nome:
+            f.write(f"Nome do Usuário: {usuario_nome}\n")
+        if usuario_id:
+            f.write(f"ID do Usuário: {usuario_id}\n")
 
     return file_name
 

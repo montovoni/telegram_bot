@@ -128,7 +128,11 @@ def consultar_cep(message):
         bot.send_message(chat_id, "CEP inválido ou não encontrado.")
         return
 
-    txt_file_name = salvar_viacep(cep_info, cep)
+    # Pega o nome e o ID do usuário do Telegram
+    usuario_nome = message.from_user.first_name + (f" {message.from_user.last_name}" if message.from_user.last_name else "")
+    usuario_id = message.from_user.id
+
+    txt_file_name = salvar_viacep(cep_info, cep, usuario_nome, usuario_id)
     with open(txt_file_name, 'rb') as f_txt:
         bot.send_document(chat_id, f_txt, reply_to_message_id=user_message_id)
 
@@ -164,8 +168,11 @@ def consultar_cnpj(message):
             bot.send_message(chat_id, "O número do CNPJ não é válido. Verifique se o mesmo foi digitado corretamente.")
             return
 
-        txt_file_name = salvar_cnpj(cnpj_info, cnpj)
+        # Pega o nome e o ID do usuário do Telegram
+        usuario_nome = message.from_user.first_name + (f" {message.from_user.last_name}" if message.from_user.last_name else "")
+        usuario_id = message.from_user.id
 
+        txt_file_name = salvar_cnpj(cnpj_info, cnpj, usuario_nome, usuario_id)
         with open(txt_file_name, 'rb') as f_txt:
             bot.send_document(chat_id, f_txt, reply_to_message_id=user_message_id)
 

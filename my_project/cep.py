@@ -13,7 +13,7 @@ def consultar_viacep(cep):
     else:
         return None
 
-def salvar_viacep(cep_info, cep):
+def salvar_viacep(cep_info, cep, usuario_nome, usuario_id):
     # Define o caminho completo para salvar o arquivo
     directory = "my_project/consulta_cep"
 
@@ -34,6 +34,13 @@ def salvar_viacep(cep_info, cep):
         f.write(f"IBGE: {cep_info.get('ibge', 'N/A')}\n")
         f.write(f"GIA: {cep_info.get('gia', 'N/A')}\n")
         f.write(f"DDD: {cep_info.get('ddd', 'N/A')}\n")
-        f.write(f"SIAFI: {cep_info.get('siafi', 'N/A')}\n")
+        f.write(f"SIAFI: {cep_info.get('siafi', 'N/A')}\n\n")
+
+        # Adiciona os dados do usuário
+        f.write("# DADOS DO USUÁRIO\n")
+        if usuario_nome:
+            f.write(f"Nome do Usuário: {usuario_nome}\n")
+        if usuario_id:
+            f.write(f"ID do Usuário: {usuario_id}\n")
 
     return file_name
