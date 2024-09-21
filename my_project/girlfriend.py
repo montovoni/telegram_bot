@@ -7,7 +7,9 @@ from langchain_openai import OpenAI
 load_dotenv(find_dotenv())
 ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
 
-def obter_resposta_lucy(entrada_usuario):
+def obter_resposta_lucy(historico, entrada_usuario):
+    # Concatena o histórico das mensagens anteriores
+    historico_concatenado = "\n".join(historico)
 
     template = """
     Você está interpretando o papel de Lucy, uma personagem com as seguintes características:
@@ -31,7 +33,7 @@ def obter_resposta_lucy(entrada_usuario):
     llm = OpenAI(temperature=0.8)
 
     # Conecta o prompt diretamente ao modelo de linguagem usando sintaxe de pipe
-    resposta = (prompt | llm).invoke({"history": "", "human_input": entrada_usuario})
+    resposta = (prompt | llm).invoke({"history": historico_concatenado, "human_input": entrada_usuario})
     # Retorna a resposta diretamente como string
     return resposta
 

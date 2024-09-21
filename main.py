@@ -1,5 +1,5 @@
-from telebot import TeleBot
 import random, os
+from telebot import TeleBot
 
 from my_project.gemini import gerar_resposta_gemini, adicionar_mensagem_gemini
 from my_project.chatgpt import gerar_resposta_chatgpt, adicionar_mensagem_chatgpt
@@ -7,7 +7,7 @@ from my_project.cep import consultar_viacep, salvar_viacep
 from my_project.cnpj import consultar_informacoes_cnpj, salvar_cnpj, validar_cnpj
 from my_project.advice import obter_conselho
 from my_project.translator import traduzir_mensagem
-from my_project.girlfriend import obter_resposta_lucy  # , obter_voz
+from my_project.girlfriend import obter_resposta_lucy
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -18,6 +18,7 @@ bot = TeleBot(auth_key)
 
 # Dicionário para rastrear o estado de conversa de cada usuário
 conversas_ativas = {}
+historico_conversas = {}
 
 @bot.message_handler(commands=['start'])
 def iniciar_comando(message):
@@ -189,22 +190,27 @@ def relacionamento_virtual(message):
     chat_id = message.chat.id
     user_message = message.text.strip()
 
-    resposta_lucy = obter_resposta_lucy(user_message)
-    bot.send_message(chat_id, resposta_lucy)
+    # Envia uma mensagem de carregamento para o usuário
+    loading_message = bot.send_message(chat_id, "Processando sua mensagem, aguarde...")
 
-    '''
-    Se desejar manter o código de áudio para uso futuro, você pode descomenta-lo:
-    audio_lucy = obter_voz(resposta_lucy)
+    try:
+        # Obtém o histórico existente ou inicia um novo se não houver
+        if chat_id not in historico_conversas:
+            historico_conversas[chat_id] = []
 
-    if audio_lucy:
-        # Enviar o áudio gerado para o usuário
-        with open(audio_lucy, 'rb') as audio_file:
-            bot.send_audio(chat_id, audio_file)
-        # Remove the temporary file after sending
-        os.remove(audio_lucy)
-    else:
+        # Gera a resposta da Lucy usando o histórico
+        resposta_lucy = obter_resposta_lucy(historico_conversas[chat_id], user_message)
+
+        # Adiciona a nova interação ao histórico
+        historico_conversas[chat_id].append(f"Usuário: {user_message}")
+        historico_conversas[chat_id].append(f"Lucy: {resposta_lucy}")
+
+        bot.delete_message(chat_id, loading_message.message_id)
         bot.send_message(chat_id, resposta_lucy)
-    '''
+
+    except Exception as e:
+        bot.delete_message(chat_id, loading_message.message_id)
+        bot.send_message(chat_id, f"Ocorreu um erro ao processar sua mensagem: {str(e)}")
 
 bot.remove_webhook()
 print("O bot está rodando! Pressione Ctrl + C para parar.")
