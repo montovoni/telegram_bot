@@ -8,6 +8,7 @@ from my_project.cnpj import consultar_informacoes_cnpj, salvar_cnpj, validar_cnp
 from my_project.advice import obter_conselho
 from my_project.translator import traduzir_mensagem
 from my_project.girlfriend import obter_resposta_lucy
+from my_project.image import generate_image
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -28,7 +29,8 @@ def iniciar_comando(message):
         "🌟 <b>Bem-vindo ao Bot Interativo!</b> 🌟\n\n"
         "<b>Interaja com a inteligência artificial:</b>\n"
         "🔹 <b>/gemini</b> - <i>Digite sua mensagem para consultar o Gemini.</i>\n"
-        "🔹 <b>/chatgpt</b> - <i>Digite sua mensagem para consultar o ChatGpt.</i>\n\n"
+        "🔹 <b>/chatgpt</b> - <i>Digite sua mensagem para consultar o ChatGpt.</i>\n"
+        "🔹 <b>/imagem</b> - <i>Envie uma descrição para gerar uma imagem.</i>\n\n"
         "<b>Encontre informações rápidas:</b>\n"
         "🔹 <b>/cep</b> - <i>Informe o número do CEP para consulta.</i>\n"
         "🔹 <b>/cnpj</b> - <i>Informe o número do CNPJ para consulta.</i>\n\n"
@@ -39,7 +41,7 @@ def iniciar_comando(message):
         "🔹 <b>/lucy</b> - <i>Converse com sua namorada virtual inteligente.</i>\n\n",
         parse_mode='HTML')
 
-@bot.message_handler(commands=['gemini', 'gemini@montovoni', 'chatgpt', 'chatgpt@montovoni', 'lucy', 'lucy@montovoni'])
+@bot.message_handler(commands=['gemini', 'gemini@montovoni', 'chatgpt', 'chatgpt@montovoni', 'lucy', 'lucy@montovoni', 'imagem', 'imagem@montovoni'])
 def iniciar_conversa(message):
     chat_id = message.chat.id
     comando = message.text.split()[0][1:].split('@')[0]
@@ -47,12 +49,12 @@ def iniciar_conversa(message):
     conversas_ativas[chat_id] = comando
     bot.send_message(chat_id, f"Você está agora conversando com {comando.capitalize()}. Para parar, digite /sair.")
 
-@bot.message_handler(commands=['sair', 'fechar'])
+@bot.message_handler(commands=['sair'])
 def encerrar_conversa(message):
     chat_id = message.chat.id
     if chat_id in conversas_ativas:
         del conversas_ativas[chat_id]
-        bot.send_message(chat_id, "Conversa encerrada. Você pode começar uma nova conversa digitando um dos comandos (/gemini, /chatgpt, /lucy).")
+        bot.send_message(chat_id, "Conversa encerrada. Você pode começar uma nova conversa digitando um dos comandos (/gemini, /chatgpt, /lucy, /imagem).")
 
 @bot.message_handler(func=lambda message: message.chat.id in conversas_ativas)
 def processar_mensagem(message):
@@ -65,6 +67,9 @@ def processar_mensagem(message):
         consultar_chatgpt(message)
     elif comando == 'lucy':
         relacionamento_virtual(message)
+    elif comando == 'imagem':
+        user_prompt = message.text.strip()
+        gera_imagem(chat_id, user_prompt)
 
 @bot.message_handler(commands=['chatgpt', 'chatgpt@montovoni'])
 def consultar_chatgpt(message):
@@ -218,6 +223,23 @@ def relacionamento_virtual(message):
     except Exception as e:
         bot.delete_message(chat_id, loading_message.message_id)
         bot.send_message(chat_id, f"Ocorreu um erro ao processar sua mensagem: {str(e)}")
+
+def gera_imagem(chat_id, user_prompt):
+    if not user_prompt:
+        bot.send_message(chat_id, "Por favor, forneça uma descrição para gerar a imagem.")
+        return
+
+    loading_message = bot.send_message(chat_id, "Gerando sua imagem, aguarde...")
+
+    try:
+        # Call the generate_image function with the user's prompt
+        image_url = generate_image(user_prompt)
+        bot.send_message(chat_id, f"Aqui está sua imagem gerada: {image_url}")
+    except Exception as e:
+        bot.send_message(chat_id, f"Erro ao gerar a imagem: {str(e)}")
+    finally:
+        # Delete the loading message after processing
+        bot.delete_message(chat_id, loading_message.message_id)
 
 bot.remove_webhook()
 print("O bot está rodando! Pressione Ctrl + C para parar.")

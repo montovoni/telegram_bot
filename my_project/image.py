@@ -1,7 +1,12 @@
-import requests
+import requests, os
+from dotenv import load_dotenv, find_dotenv
+
+# Load environment variables
+load_dotenv(find_dotenv())
+
 
 def generate_image(prompt):
-    api_key = "sk-svcacct-7-jFpL_-d1PKQpZEad8JFsOg3kyGPHfRxK62pHpchV_WJG-H_ZGSF0weVqKR_gT3BlbkFJKeOvPZlaAv8_j8LSZduQdHGbccpNVPK55UBsbJE4coe-PheFCacWxbUSVo4A"
+    api_key = os.getenv("OPENAI_API_KEY")
     url = "https://api.openai.com/v1/images/generations"
 
     headers = {
@@ -26,5 +31,3 @@ def generate_image(prompt):
 
     except requests.exceptions.RequestException as e:
         print(f"Ocorreu um erro: {e}")
-
-generate_image("um gato siamês branco")
