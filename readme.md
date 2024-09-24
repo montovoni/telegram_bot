@@ -1,4 +1,3 @@
-
 # Bot de Telegram com Integrações de API
 
 Este projeto é um bot de Telegram que integra diversas APIs, como a API do Google Generative AI e a API de tradução DeepL, para oferecer funcionalidades avançadas de conversação e tradução diretamente no Telegram.
