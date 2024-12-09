@@ -15,7 +15,7 @@ Siga os passos abaixo para configurar o bot na sua máquina local:
    git clone https://github.com/seu-usuario/telegram-bot.git
    cd telegram-bot
    ```
-
+   
 2. **Instale as dependências necessárias:**
 
    Abra o terminal ou prompt de comando e execute os seguintes comandos:
@@ -117,6 +117,8 @@ Sinta-se à vontade para contribuir com este projeto. Para isso:
 5. Abra um pull request.
 
 ## Licença
+
+
 
 Este projeto está licenciado sob a [https://github.com/montovoni]
 
